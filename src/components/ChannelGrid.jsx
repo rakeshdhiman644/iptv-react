@@ -4,7 +4,7 @@ import ChannelCard from "./ChannelCard";
 
 const ChannelGrid = ({ data, channels, logos, onPlay }) => {
   return (
-    <div style={{ flex: 1, height: "100%", width: "100%" }}> 
+    <div style={{ flex: 1, height: "100%", width: "100%" }}>
       <VirtuosoGrid
         style={{ height: "100%" }}
         totalCount={data.length}
@@ -14,7 +14,7 @@ const ChannelGrid = ({ data, channels, logos, onPlay }) => {
           const ch = channels[s.channel];
           // Ensure we don't crash if channel data is missing (though filtered list should be safe)
           if (!ch) return null;
-          
+
           return (
             <ChannelCard
               key={s.url}
