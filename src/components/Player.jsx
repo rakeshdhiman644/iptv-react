@@ -37,27 +37,16 @@ export default function Player({ channel, onClose }) {
       if (video.current) {
         try {
           video.current.pause();
-        } catch (e) {}
+        } catch (e) { }
         try {
           video.current.removeAttribute("src");
           video.current.load();
-        } catch (e) {}
+        } catch (e) { }
       }
     };
   }, [channel]);
 
-  // shrink player on scroll (adds/removes .mini)
-  useEffect(() => {
-    const onScroll = () => {
-      const box = document.getElementById("playerBox");
-      if (!box) return;
-      if (window.scrollY > 80) box.classList.add("mini");
-      else box.classList.remove("mini");
-    };
 
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
     <div id="playerBox">

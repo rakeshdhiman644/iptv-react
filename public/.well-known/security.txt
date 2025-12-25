@@ -1,0 +1,7 @@
+# Security Policy
+# This is an educational demo application
+Contact: mailto:security@example.com
+Expires: 2025-12-31T23:59:59.000Z
+Preferred-Languages: en
+# Note: Update the Contact email and add your domain to Canonical before deploying
+

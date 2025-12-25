@@ -1,0 +1,16 @@
+{
+  "name": "ChannelHub - Demo Channel Directory",
+  "short_name": "ChannelHub",
+  "description": "A demo channel directory app for educational purposes. Does not host or stream any content.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}

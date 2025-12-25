@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 
 export default function Controls({ categories, channels, onFilter }) {
@@ -14,16 +14,52 @@ export default function Controls({ categories, channels, onFilter }) {
     .filter(c => used.has(c.id))
     .map(c => ({ value: c.id, label: c.name }));
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      onFilter(text, cat?.value);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [text, cat, onFilter]);
+
   return (
     <div className="controls">
-      <input
-        style={{border: "1px solid rgba(206, 212, 218, 0.2)"}}
-        placeholder="Search channel"
-        onChange={e => {
-          setText(e.target.value);
-          onFilter(e.target.value, cat?.value);
-        }}
-      />
+      <div style={{ position: "relative", width: "100%" }}>
+        <input
+          value={text}
+          style={{
+            border: "1px solid rgba(206, 212, 218, 0.2)",
+            width: "100%",
+            boxSizing: "border-box", // Ensure padding doesn't overflow width
+            paddingRight: text ? "30px" : "12px" // Space for clear button
+          }}
+          placeholder="Search channel"
+          onChange={e => {
+            setText(e.target.value);
+          }}
+        />
+        {text && (
+          <div
+            onClick={() => setText("")}
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "#9ca3af",
+              cursor: "pointer",
+              fontSize: "20px",
+              lineHeight: 1,
+              padding: "4px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+            title="Clear"
+          >
+            ×
+          </div>
+        )}
+      </div>
 
       <Select
         isSearchable={true}
@@ -32,9 +68,12 @@ export default function Controls({ categories, channels, onFilter }) {
         placeholder="All Categories"
         onChange={v => {
           setCat(v);
-          onFilter(text, v?.value);
         }}
         styles={{
+          container: base => ({
+            ...base,
+            width: "100%"
+          }),
           control: (base, state) => ({
             ...base,
             background: "#020617",
