@@ -15,6 +15,7 @@ const QUALITY_PRIORITY = [
   "1440p",
   "1080p",
   "720p",
+  "576p",
   "480p",
   "360p",
   "SD"
@@ -55,29 +56,35 @@ export default function App() {
 
   useEffect(() => {
     async function load() {
-      const [s, c, l, cat] = await Promise.all([
+      const [s, c, l, cat] = await Promise.allSettled([
         fetch(STREAMS_API).then(r => r.json()),
         fetch(CHANNELS_API).then(r => r.json()),
         fetch(LOGOS_API).then(r => r.json()),
         fetch(CATEGORIES_API).then(r => r.json())
       ]);
 
+      const streams = s.status === "fulfilled" ? s.value : [];
+      const channels = c.status === "fulfilled" ? c.value : [];
+      const logos = l.status === "fulfilled" ? l.value : [];
+      const categories = cat.status === "fulfilled" ? cat.value : [];
+
       const channelMap = {};
-      c.forEach(ch => channelMap[ch.id] = ch);
+      channels.forEach(ch => channelMap[ch.id] = ch);
 
       const logoMap = {};
-      l.forEach(lo => lo.channel && (logoMap[lo.channel] = lo.url));
+      logos.forEach(lo => lo.channel && (logoMap[lo.channel] = lo.url));
 
       setChannels(channelMap);
       setLogos(logoMap);
-      setCategories(cat);
+      setCategories(categories);
 
-      const valid = s.filter(x => x.url && channelMap[x.channel]);
+      const valid = streams.filter(x => x.url && channelMap[x.channel]);
       const unique = dedupeStreamsByChannel(valid);
 
       setStreams(unique);
       setFiltered(unique);
       setLoading(false);
+
     }
     load();
   }, []);
