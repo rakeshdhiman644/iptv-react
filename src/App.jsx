@@ -107,7 +107,7 @@ export default function App() {
   return (
     <>
       <Disclaimer />
-      <h2>📺 Channel List</h2>
+      <h2>📺 Channel Hub</h2>
 
       {playing && (
         <Suspense fallback={<div className="modal-loading">Loading Player...</div>}>
