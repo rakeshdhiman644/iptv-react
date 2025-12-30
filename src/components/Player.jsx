@@ -2,41 +2,51 @@ import { useEffect, useRef } from "react";
 import Hls from "hls.js";
 
 export default function Player({ channel, onClose }) {
-  const videoRef = useRef(null);
-  const hlsRef = useRef(null);
+  const video = useRef(null);
+  const hls = useRef(null);
 
   useEffect(() => {
-    if (!channel?.url || !videoRef.current) return;
+    let mounted = true;
 
-    const video = videoRef.current;
+    async function attach() {
+      if (!video.current) return;
 
-    if (Hls.isSupported()) {
-      const hls = new Hls();
-      hlsRef.current = hls;
-      hls.loadSource(channel.url); // raw m3u8 URL
-      hls.attachMedia(video);
-    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = channel.url;
-    } else {
-      console.error("HLS not supported in this browser");
+      if (Hls.isSupported()) {
+        hls.current = new Hls();
+        hls.current.loadSource(channel.url);
+        hls.current.attachMedia(video.current);
+      } else {
+        video.current.src = channel.url;
+      }
+
+      try {
+        await video.current.play();
+      } catch (e) {
+        // Autoplay might be blocked; ignore silently
+      }
     }
 
-    video.play().catch(() => { });
+    attach();
 
     return () => {
-      if (hlsRef.current) {
-        hlsRef.current.destroy();
-        hlsRef.current = null;
+      mounted = false;
+      if (hls.current) {
+        hls.current.destroy();
+        hls.current = null;
       }
-      if (video) {
+      if (video.current) {
         try {
-          video.pause();
-          video.removeAttribute("src");
-          video.load();
+          video.current.pause();
+        } catch (e) { }
+        try {
+          video.current.removeAttribute("src");
+          video.current.load();
         } catch (e) { }
       }
     };
   }, [channel]);
+
+
 
   return (
     <div id="playerBox">
@@ -44,7 +54,7 @@ export default function Player({ channel, onClose }) {
         <strong id="playerTitle" className="player-title">{channel.name}</strong>
         <button id="closePlayer" aria-label="Close player" onClick={onClose}>×</button>
       </div>
-      <video ref={videoRef} controls autoPlay playsInline style={{ width: "100%" }} />
+      <video id="video" ref={video} controls autoPlay playsInline />
     </div>
   );
 }
