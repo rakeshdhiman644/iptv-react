@@ -18,6 +18,7 @@ const ChannelCard = memo(function ChannelCard({ stream, channel, logo, style, on
           src={logo}
           alt={channel?.name || "Channel Logo"}
           loading="lazy"
+          decoding="async"
           onError={handleImgError}
         />
       }

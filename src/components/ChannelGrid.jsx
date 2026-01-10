@@ -33,7 +33,7 @@ const ChannelGrid = ({ data, channels, logos, onPlay }) => {
           }
         }}
         // Optional: reduce overscan if performance is issue, or increase for smoother scroll
-        overscan={200}
+        overscan={100}
       />
     </div>
   );
