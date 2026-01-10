@@ -116,6 +116,15 @@ export default function App() {
       const valid = streams.filter(x => x.url && channelMap[x.channel]);
       const unique = dedupeStreamsByChannel(valid);
 
+      // Sort: "IN" channels first
+      unique.sort((a, b) => {
+        const cA = channelMap[a.channel]?.country;
+        const cB = channelMap[b.channel]?.country;
+        if (cA === "IN" && cB !== "IN") return -1;
+        if (cA !== "IN" && cB === "IN") return 1;
+        return 0;
+      });
+
       setStreams(unique);
       setFiltered(unique);
       setError(null);
@@ -191,7 +200,7 @@ export default function App() {
 
       {loading ? (
         <div className="grid skeleton-container">
-          {Array.from({ length: 27 }).map((_, i) => (
+          {Array.from({ length: 28 }).map((_, i) => (
             <div className="card skeleton" key={i}>
               <div className="skeleton-img" />
               <div className="skeleton-line short" />
